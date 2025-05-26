@@ -404,36 +404,20 @@ async def get_entity_neighbors(self, entity_name: str, max_hops: int = 2):
 #### **1. Event-Driven Architecture**
 ```mermaid
 flowchart LR
-    subgraph BusinessEvents["📊 Business Events"]
-        Transactions[Transactions]
-        Interactions[Interactions]
-        SupplyChain[Supply Chain]
-        CustomerData[Customer Data]
-    end
+    %% Main components with simplified groups
+    BusinessEvents["📊 Business Events"]
+    EpisodeProcessing["🧠 Episode Processing"]
+    KnowledgeGraph["🌐 Knowledge Graph"]
+    Intelligence["📈 Intelligence"]
     
-    subgraph EpisodeProcessing["🧠 Episode Processing"]
-        AIAnalysis[AI Analysis]
-        EntityExtract[Entity Extract]
-        ContextParse[Context Parse]
-        ConfidenceScore[Confidence Score]
-    end
+    %% Process flow arrows
+    BusinessEvents --> EpisodeProcessing --> KnowledgeGraph --> Intelligence
     
-    subgraph KnowledgeGraph["🌐 Knowledge Graph"]
-        GraphStorage[Graph Storage]
-        Relationships[Relationships]
-        TemporalData[Temporal Data]
-        Partitioning[Partitioning]
-    end
-    
-    subgraph Intelligence["📈 Intelligence"]
-        Reports[Reports]
-        Insights[Insights]
-        Predictions[Predictions]
-        Analytics[Analytics]
-    end
-      BusinessEvents --> EpisodeProcessing
-    EpisodeProcessing --> KnowledgeGraph
-    KnowledgeGraph --> Intelligence
+    %% Component descriptions as notes
+    BusinessEvents -.- BusinessNote["Transactions, Interactions,<br/>Supply Chain, Customer Data"]
+    EpisodeProcessing -.- ProcessingNote["AI Analysis, Entity Extraction,<br/>Context Parsing, Confidence Scoring"]
+    KnowledgeGraph -.- GraphNote["Graph Storage, Relationships,<br/>Temporal Data, Partitioning"]
+    Intelligence -.- IntelligenceNote["Reports, Insights,<br/>Predictions, Analytics"]
 ```
 
 #### **2. Layered Architecture Pattern**
@@ -500,27 +484,18 @@ graph TB
 #### **Caching Strategy**
 ```mermaid
 graph TB
-    subgraph CachingLayers["💾 Caching Layers"]
-        subgraph AppCache["🧠 Application Cache (In-Memory)"]
-            FreqEntities[Frequently accessed entities]
-            RecentSearch[Recent search results]
-            GraphStats[Graph statistics]
-        end
-        
-        subgraph RedisCache["🌐 Azure Cache for Redis (Optional)"]
-            SessionData[Session data]
-            SharedCache[Cross-instance shared cache]
-            ComputedPatterns[Computed graph patterns]
-        end
-        
-        subgraph CosmosCache["📊 Cosmos DB Native Caching"]
-            AutoCache[Automatic request caching]
-            QueryOptimize[Query result optimization]
-            IndexAccel[Index-based acceleration]
-        end
-    end
-      AppCache -.-> RedisCache
-    RedisCache -.-> CosmosCache
+    %% Main caching components
+    AppCache["🧠 Application Cache<br/>(In-Memory)"]
+    RedisCache["🌐 Azure Cache for Redis<br/>(Optional)"]
+    CosmosCache["📊 Cosmos DB<br/>Native Caching"]
+    
+    %% Cache flow
+    AppCache -.-> RedisCache -.-> CosmosCache
+    
+    %% Component descriptions
+    AppCache -.- AppCacheNote["Frequently accessed entities,<br/>Recent search results,<br/>Graph statistics"]
+    RedisCache -.- RedisCacheNote["Session data,<br/>Cross-instance shared cache,<br/>Computed graph patterns"]
+    CosmosCache -.- CosmosCacheNote["Automatic request caching,<br/>Query optimization,<br/>Index-based acceleration"]
 ```
 
 ### **Security Architecture**
@@ -528,38 +503,20 @@ graph TB
 #### **Multi-Layer Security Model**
 ```mermaid
 graph TB
-    subgraph SecurityLayers["🛡️ Security Layers"]
-        subgraph AppSecurity["🔐 Application Security"]
-            InputValidation[Input validation & sanitization]
-            RateLimit[API rate limiting]
-            AuthZ[Authentication & authorization]
-            SecureCoding[Secure coding practices]
-        end
-        
-        subgraph NetworkSecurity["🌐 Network Security"]
-            VNet[VNet integration]
-            PrivateEndpoints[Private endpoints]
-            NSG[Network security groups]
-            SSLTLS[SSL/TLS encryption]
-        end
-        
-        subgraph DataSecurity["💾 Data Security"]
-            EncryptRest[Encryption at rest - Cosmos DB]
-            EncryptTransit[Encryption in transit]
-            RBAC[Access control - RBAC]
-            DataGovernance[Data classification & governance]
-        end
-        
-        subgraph Monitoring["🔍 Monitoring & Compliance"]
-            AuditLog[Audit logging]
-            SecurityMon[Security monitoring]
-            ComplianceReport[Compliance reporting]
-            ThreatDetection[Threat detection]
-        end
-    end
-      AppSecurity --> NetworkSecurity
-    NetworkSecurity --> DataSecurity
-    DataSecurity --> Monitoring
+    %% Main security components
+    AppSecurity["🔐 Application<br/>Security"]
+    NetworkSecurity["🌐 Network<br/>Security"]
+    DataSecurity["💾 Data<br/>Security"]
+    Monitoring["🔍 Monitoring &<br/>Compliance"]
+    
+    %% Security flow
+    AppSecurity --> NetworkSecurity --> DataSecurity --> Monitoring
+    
+    %% Security layer descriptions
+    AppSecurity -.- AppSecNote["Input validation,<br/>Rate limiting,<br/>Authentication & authorization"]
+    NetworkSecurity -.- NetSecNote["VNet integration,<br/>Private endpoints,<br/>SSL/TLS encryption"]
+    DataSecurity -.- DataSecNote["Encryption at rest/transit,<br/>RBAC, Data governance"]
+    Monitoring -.- MonitorNote["Audit logging,<br/>Security monitoring,<br/>Threat detection"]
 ```
 
 ### **Deployment Architecture**
@@ -732,29 +689,6 @@ export GRAPHITI_DEBUG=true
 ```
 
 ---
-
-## 🎯 Roadmap & Future Enhancements
-
-### **Near-term (Q1 2024)**
-- [ ] **REST API**: FastAPI service layer for external integrations
-- [ ] **Batch Processing**: Enhanced bulk episode processing
-- [ ] **Monitoring**: Azure Monitor integration and dashboards
-- [ ] **Documentation**: Comprehensive API documentation
-
-### **Medium-term (Q2-Q3 2024)**
-- [ ] **Vector Search**: Native Cosmos DB vector search integration
-- [ ] **Real-time Updates**: Event-driven processing with Azure Functions
-- [ ] **Multi-tenancy**: Enhanced group isolation and security
-- [ ] **Export/Import**: Knowledge graph backup and migration tools
-
-### **Long-term (Q4 2024+)**
-- [ ] **Machine Learning**: Predictive analytics and pattern recognition
-- [ ] **Natural Language Interface**: Chat-based graph querying
-- [ ] **Visualization**: Interactive graph visualization tools
-- [ ] **Enterprise Features**: Advanced security and compliance features
-
----
-
 ## 🤝 Contributing
 
 ### **Development Setup**
