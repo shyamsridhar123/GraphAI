@@ -1,0 +1,22 @@
+=== CUSTOMER INTELLIGENCE REPORT ===
+Generated: 2025-05-26 15:08:05
+Total insights found: 9
+
+Customer profiles and interactions:
+  • CUST_001
+  • CUST_002
+
+Purchase transactions:
+  • Urban Classic Loafers
+  • EcoWalk Sustainable Sneakers
+
+Customer browsing behavior:
+  • Marcus Chen
+  • sneakers
+
+Customer service interactions:
+  • support
+
+Customer segmentation data:
+  • professional_urban
+  • eco_conscious_millennials

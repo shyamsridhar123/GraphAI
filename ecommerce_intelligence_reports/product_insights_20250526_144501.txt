@@ -1,0 +1,12 @@
+===== PRODUCT INSIGHTS REPORT =====
+Generated: 2025-05-26 14:45:04
+
+PRODUCT CATALOG ANALYSIS:
+• Total Products: 10
+
+POPULAR PRODUCTS:
+  1. Premium Product 18 ($131.26) - Books
+  2. Premium Product 12 ($22.67) - Sports
+  3. Premium Product 11 ($256.64) - Books
+  4. Premium Product 19 ($46.52) - Sports
+  5. Premium Product 20 ($62.57) - Sports

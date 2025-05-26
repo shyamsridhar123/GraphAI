@@ -1,0 +1,8 @@
+=== KNOWLEDGE GRAPH STATISTICS ===
+Generated: 2025-05-26 15:08:23
+
+Total episodes: 389
+Total entities: 133
+Total relationships: 3023
+Relationship density: 22.73 connections per entity
+Knowledge extraction rate: 0.34 entities per episode

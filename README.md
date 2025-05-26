@@ -833,17 +833,3 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - **OpenAI**: Advanced language models for entity extraction
 
 ---
-
-## 📞 Contact & Support
-
-For questions, support, or collaboration opportunities:
-
-- **Technical Issues**: Create a GitHub issue with detailed information
-- **Business Inquiries**: Contact the development team
-- **Feature Requests**: Use GitHub Discussions for community input
-- **Security Issues**: Follow responsible disclosure guidelines
-
----
-
-#   G r a p h A I  
- 

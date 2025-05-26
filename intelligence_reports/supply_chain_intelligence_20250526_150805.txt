@@ -1,0 +1,18 @@
+=== SUPPLY CHAIN INTELLIGENCE REPORT ===
+Generated: 2025-05-26 15:08:11
+Total insights found: 7
+
+Raw material suppliers:
+  • WOOL_FARM_NZ_001
+
+Manufacturing operations:
+  • MANUFACTURING_VN_001
+  • Vietnam
+
+Supply disruptions:
+  • extreme weather
+  • Supply disruption recovery day 2
+
+Capacity management:
+  • WOOL_FARM_NZ_001
+  • HIGH priority materials
