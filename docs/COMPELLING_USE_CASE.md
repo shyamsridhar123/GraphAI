@@ -852,7 +852,7 @@ Traditional Systems → Graphiti-Cosmos Advantage
 **Environment Setup:**
 ```powershell
 # 1. Install required dependencies
-pip install -r requirements.txt
+uv sync
 
 # 2. Configure Azure credentials (one-time setup)
 # Set environment variables in PowerShell:

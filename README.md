@@ -56,7 +56,7 @@ uv pip install -e .
 ```bash
 git clone https://github.com/shyamsridhar123/graphiti-cosmos
 cd "graph collection"
-pip install -e .
+uv sync
 ```
 
 ### Configuration
@@ -758,7 +758,7 @@ source .venv/bin/activate  # Linux/Mac
 .venv\Scripts\activate     # Windows
 
 # Install dependencies
-pip install -r requirements.txt
+uv sync
 
 # Set up environment
 cp .env.template .env

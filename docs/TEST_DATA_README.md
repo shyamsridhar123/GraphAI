@@ -176,7 +176,7 @@ COSMOS_PASSWORD=your-primary-key
 ### Prerequisites
 
 ```powershell
-pip install -r requirements.txt
+uv sync
 ```
 
 Required packages:

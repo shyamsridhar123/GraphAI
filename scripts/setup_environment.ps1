@@ -31,9 +31,9 @@ python -m venv .venv
 Write-Host "Activating virtual environment..." -ForegroundColor Yellow
 & .\.venv\Scripts\Activate.ps1
 
-# Install dependencies from requirements.txt
+# Install dependencies using uv
 Write-Host "Installing dependencies..." -ForegroundColor Yellow
-pip install -r requirements.txt
+uv sync
 
 # Check if .env file exists
 if (Test-Path .\.env) {
