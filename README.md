@@ -143,7 +143,6 @@ graph collection/
 ├── 📁 config/
 │   └── [configuration files]       # Environment configurations
 ├── 📁 intelligence_reports/        # Generated business intelligence reports
-├── test_search.py                  # Basic search functionality tests
 ├── test_search_enhanced.py         # Advanced search validation
 └── README.md                       # This file
 ```
