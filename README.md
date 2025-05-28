@@ -374,7 +374,8 @@ graph TB
 graph TB
     subgraph DataLayer["💾 Data Layer"]
         CosmosDB["🌐 Azure Cosmos DB<br/>(Gremlin API)"]
-        OpenAI["🤖 Azure OpenAI<br/>Services"]        VectorStorage["📊 Vector Storage<br/>& Embeddings"]
+        OpenAI["🤖 Azure OpenAI<br/>Services"]
+        VectorStorage["📊 Vector Storage<br/>& Embeddings"]
         Config["🔄 Configuration &<br/>State Management"]
         
         %% Service descriptions
