@@ -144,26 +144,13 @@ graph collection/
 │   ├── CLEANUP_SUMMARY.md             # Workspace cleanup notes
 │   └── README.md                      # Data loading documentation
 ├── 📁 data/
-│   ├── manybirds_products.json        # Original e-commerce data
-│   ├── expanded_manybirds_products.json # Enhanced product catalog
-│   ├── enhanced_manybirds_test_data.json # Advanced test dataset
-│   └── combined_manybirds_dataset.json # Comprehensive dataset
-├── 📁 intelligence_reports/           # Generated business intelligence reports
-├── 📁 ecommerce_intelligence_reports/ # E-commerce specific reports
-├── 📁 scripts/
-│   ├── setup_environment.ps1          # Environment setup script (uv-ready)
-│   ├── load_manybirds_to_cosmos.py    # Data loading utility
-│   ├── combine_datasets.py            # Dataset combination tool
-│   ├── generate_enhanced_test_data.py # Enhanced test data generator
-│   └── get_cosmos_keys.ps1            # Azure credential helper
-├── 📁 visualizations/
-│   └── ecommerce_visualization.md     # Generated graph visualizations
-├── pyproject.toml                     # Modern Python project configuration (uv)
-├── uv.lock                           # uv dependency lock file
-├── test_search_enhanced.py           # Advanced search validation
-├── .env                              # Environment variables (Azure credentials)
-├── .gitignore                        # Git ignore patterns (uv-updated)
-└── README.md                         # This comprehensive guide
+│   └── manybirds_products.json     # Sample e-commerce data
+├── 📁 config/
+│   └── [configuration files]       # Environment configurations
+├── 📁 intelligence_reports/        # Generated business intelligence reports
+├── test_search.py                  # Basic search functionality tests
+├── test_search_enhanced.py         # Advanced search validation
+└── README.md                       # This file
 ```
 
 ---
