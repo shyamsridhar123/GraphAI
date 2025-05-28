@@ -530,22 +530,6 @@ class GraphitiCosmosConfig:
         return cls()
 ```
 
-### **Scalability Architecture**
-
-#### **Horizontal Scaling Strategy**
-```mermaid
-graph TB
-    subgraph LoadDistribution["⚡ Load Distribution"]
-        LoadBalancer[🌐 Azure Load Balancer]
-          LoadBalancer --> Instance1["Instance 1<br/>Episode Process"]
-        LoadBalancer --> Instance2["Instance 2<br/>Episode Process"]
-        LoadBalancer --> InstanceN["Instance N<br/>Episode Process"]
-        
-        Instance1 --> CosmosDB["🗃️ Azure Cosmos DB<br/>Auto-partitioned"]
-        Instance2 --> CosmosDB
-    InstanceN --> CosmosDB
-    end
-```
 
 #### **Data Partitioning Strategy**
 - **Partition Key**: `group_name` for tenant isolation
@@ -553,84 +537,6 @@ graph TB
 - **Cross-Partition Queries**: Optimized for common search patterns
 - **Automatic Scaling**: Cosmos DB handles partition management
 
-#### **Caching Strategy**
-```mermaid
-graph TB
-    %% Main caching components
-    AppCache["🧠 Application Cache<br/>(In-Memory)"]
-    RedisCache["🌐 Azure Cache for Redis<br/>(Optional)"]
-    CosmosCache["📊 Cosmos DB<br/>Native Caching"]
-    
-    %% Cache flow
-    AppCache -.-> RedisCache -.-> CosmosCache
-    
-    %% Component descriptions
-    AppCache -.- AppCacheNote["Frequently accessed entities,<br/>Recent search results,<br/>Graph statistics"]
-    RedisCache -.- RedisCacheNote["Session data,<br/>Cross-instance shared cache,<br/>Computed graph patterns"]
-    CosmosCache -.- CosmosCacheNote["Automatic request caching,<br/>Query optimization,<br/>Index-based acceleration"]
-```
-
-### **Security Architecture**
-
-#### **Multi-Layer Security Model**
-```mermaid
-graph TB
-    %% Main security components
-    AppSecurity["🔐 Application<br/>Security"]
-    NetworkSecurity["🌐 Network<br/>Security"]
-    DataSecurity["💾 Data<br/>Security"]
-    Monitoring["🔍 Monitoring &<br/>Compliance"]
-    
-    %% Security flow
-    AppSecurity --> NetworkSecurity --> DataSecurity --> Monitoring
-    
-    %% Security layer descriptions
-    AppSecurity -.- AppSecNote["Input validation,<br/>Rate limiting,<br/>Authentication & authorization"]
-    NetworkSecurity -.- NetSecNote["VNet integration,<br/>Private endpoints,<br/>SSL/TLS encryption"]
-    DataSecurity -.- DataSecNote["Encryption at rest/transit,<br/>RBAC, Data governance"]
-    Monitoring -.- MonitorNote["Audit logging,<br/>Security monitoring,<br/>Threat detection"]
-```
-
-### **Deployment Architecture**
-
-#### **Cloud-Native Deployment Pattern**
-```mermaid
-graph TB
-    subgraph AzureCloud["☁️ Azure Cloud Deployment"]
-        subgraph AppService["☁️ Azure App Service / Container Instances"]
-            AutoScale[Auto-scaling configuration]
-            BlueGreen[Blue-green deployment]
-            HealthChecks[Health checks & monitoring]
-            CICD[CI/CD pipeline integration]
-        end
-        
-        subgraph CosmosService["🗃️ Azure Cosmos DB"]
-            MultiRegion[Multi-region replication]
-            AutoFailover[Automatic failover]
-            BackupDR[Backup & disaster recovery]
-            PerfTier[Performance tier optimization]
-        end
-        
-        subgraph OpenAIService["🤖 Azure OpenAI"]
-            ModelDeploy[Model deployment management]
-            RateQuota[Rate limiting & quota management]
-            RegionalAvail[Regional availability]
-            CostOptim[Cost optimization]
-        end
-        
-        subgraph MonitorService["📊 Azure Monitor & Application Insights"]
-            PerfMon[Performance monitoring]
-            ErrorTracking[Error tracking & alerts]
-            CustomMetrics[Custom metrics & dashboards]
-            LogAggr[Log aggregation & analysis]
-        end
-    end
-      AppService --> CosmosService
-    AppService --> OpenAIService
-    AppService --> MonitorService
-```
-
----
 
 ## 📈 Performance & Scalability
 
