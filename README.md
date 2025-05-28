@@ -36,6 +36,8 @@ Raw Business Event → AI Analysis → Knowledge Graph → Business Intelligence
 - **Python 3.12+**
 - **uv** (Ultra-fast Python package installer) - [Install uv](https://docs.astral.sh/uv/getting-started/installation/)
 
+> **📝 Note**: This educational implementation uses Cosmos DB Gremlin API for graph operations. For production vector storage capabilities, consider Azure Cosmos DB NoSQL API or Azure Cognitive Search (see Vector Storage Architecture Notes below).
+
 ### Installation
 
 #### Option 1: Using uv (Recommended - Fastest)
@@ -372,14 +374,13 @@ graph TB
 graph TB
     subgraph DataLayer["💾 Data Layer"]
         CosmosDB["🌐 Azure Cosmos DB<br/>(Gremlin API)"]
-        OpenAI["🤖 Azure OpenAI<br/>Services"]
-        VectorStorage["📊 Vector Storage<br/>& Embeddings"]
+        OpenAI["🤖 Azure OpenAI<br/>Services"]        VectorStorage["📊 Vector Storage<br/>& Embeddings"]
         Config["🔄 Configuration &<br/>State Management"]
         
         %% Service descriptions
         CosmosDB -.- CosmosNote["Vertices, Edges,<br/>Scaling, Distribution"]
         OpenAI -.- OpenAINote["GPT-4, Embeddings,<br/>NLP Processing"]
-        VectorStorage -.- VectorNote["Semantic Search,<br/>Similarity, Indexing"]
+        VectorStorage -.- VectorNote["⚠️ Limited in Gremlin API<br/>Use NoSQL API for vectors"]
         Config -.- ConfigNote["Environment Config,<br/>Connection Pooling"]
     end
     
@@ -435,6 +436,54 @@ flowchart TD
 - **🐍 Python 3.12+**: Async/await for concurrent processing
 - **🔗 Gremlin Python Driver**: Graph database operations
 - **📊 FastAPI**: RESTful API services (when needed)
+
+### **⚠️ Vector Storage Architecture Notes**
+
+**Current Implementation:**
+This educational implementation uses Azure Cosmos DB's Gremlin API for graph operations. However, **Cosmos DB's Gremlin API does not support native vector storage or search**.
+
+**Production Architecture Options:**
+
+1. **🎯 Azure Cosmos DB NoSQL API** (Recommended for production)
+   - Native vector indexing and search capabilities
+   - Built-in hybrid search (vector + text)
+   - Same global distribution as Gremlin API
+   - Vector indexing for semantic similarity
+
+2. **🔍 Azure Cognitive Search** (Hybrid approach)
+   - Advanced vector search with filters
+   - Combines full-text and vector search
+   - Rich query capabilities and faceted search
+   - Integrates with Cosmos DB as data source
+
+3. **🏗️ Dual Storage Architecture** (Enterprise approach)
+   - Cosmos DB Gremlin API for graph relationships
+   - Cosmos DB NoSQL API for vector embeddings
+   - Azure Cognitive Search for complex queries
+   - Provides best of all approaches
+
+**Migration Path:**
+To implement production vector storage, you would:
+```python
+# Instead of storing embeddings in Gremlin properties
+await self._store_entity_embedding(entity_id, embedding)
+
+# Use Azure Cosmos DB NoSQL API vector operations
+from azure.cosmos import CosmosClient
+container.upsert_item({
+    "id": entity_id,
+    "embedding": embedding,  # Full vector
+    "entity_data": entity_properties
+})
+
+# Or integrate with Azure Cognitive Search
+search_client.upload_documents([{
+    "id": entity_id,
+    "content": entity.description,
+    "embedding": embedding,
+    "metadata": entity_properties
+}])
+```
 
 ### **Core Components**
 
@@ -549,7 +598,7 @@ class GraphitiCosmosConfig:
 ### **Scalability Features**
 - **Global Distribution**: Azure Cosmos DB multi-region support
 - **Horizontal Scaling**: Automatic partition management
-- **Vector Search**: Efficient similarity searches at scale
+- **Vector Search**: ⚠️ Limited in current Gremlin implementation (see production options above)
 - **Caching**: Smart caching for frequently accessed patterns
 
 ### **Resource Requirements**
@@ -659,6 +708,15 @@ class GraphitiCosmosConfig:
 🐌 Slow search responses
 ```
 **Solution**: Optimize Gremlin queries and consider indexing strategies
+
+#### 5. **Vector Storage Limitations**
+```
+⚠️ Limited semantic search capabilities
+```
+**Solution**: The current implementation using Cosmos DB Gremlin API has limited vector storage. For production semantic search:
+- Use Azure Cosmos DB NoSQL API with vector indexing
+- Integrate Azure Cognitive Search for hybrid search
+- Consider dual storage architecture (see Vector Storage Architecture Notes above)
 
 ### **Debug Mode**
 Enable detailed logging by setting environment variable:

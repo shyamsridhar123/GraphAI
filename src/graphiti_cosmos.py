@@ -501,11 +501,14 @@ class GraphitiCosmos:
             await self._store_entity_embedding(entity_id, entity.embedding)
         
         return entity_id
-    
     async def _store_entity_embedding(self, entity_id: str, embedding: List[float]):
-        """Store entity embedding (simplified - would need vector storage in production)"""
-        # Note: Cosmos DB doesn't natively support vector storage
-        # In production, you'd use Azure Cognitive Search or similar
+        """Store entity embedding (simplified - Gremlin API doesn't support vector search)"""
+        # Note: Cosmos DB Gremlin API doesn't support vector storage/search
+        # Azure Cosmos DB DOES support embeddings via NoSQL API with vector indexing
+        # In production, you'd use either:
+        # 1. Azure Cosmos DB NoSQL API with vector search capabilities
+        # 2. Azure Cognitive Search for hybrid vector + text search
+        # 3. Dual storage: Gremlin for graph + NoSQL for vectors
         
         # Store embedding as a property (truncated for demo)
         embedding_str = json.dumps(embedding[:10])  # Store only first 10 dimensions
