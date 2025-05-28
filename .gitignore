@@ -38,6 +38,10 @@ ENV/
 env/
 .env/
 
+# uv specific
+.python-version
+uv.lock
+
 # IDEs and editors
 .vscode/
 .idea/

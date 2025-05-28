@@ -34,12 +34,29 @@ Raw Business Event → AI Analysis → Knowledge Graph → Business Intelligence
 - **Azure Cosmos DB** account with Gremlin API enabled
 - **Azure OpenAI** service with GPT-4 and text-embedding models deployed
 - **Python 3.12+**
+- **uv** (Ultra-fast Python package installer) - [Install uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 ### Installation
+
+#### Option 1: Using uv (Recommended - Fastest)
 ```bash
-git clone <repository-url>
+git clone https://github.com/shyamsridhar123/graphiti-cosmos
 cd "graph collection"
-pip install -r requirements.txt
+
+# Install uv if you haven't already
+# On Windows (PowerShell)
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Create virtual environment and install dependencies
+uv venv
+uv pip install -e .
+```
+
+#### Option 2: Using pip (Legacy)
+```bash
+git clone https://github.com/shyamsridhar123/graphiti-cosmos
+cd "graph collection"
+pip install -e .
 ```
 
 ### Configuration
@@ -63,8 +80,45 @@ AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT=text-embedding-3-large
 GRAPHITI_GROUP_NAME=my_business_graph
 ```
 
+### Development Setup
+
+#### Install Development Dependencies
+```bash
+# Install with development dependencies
+uv pip install -e ".[dev]"
+
+# Or install specific dependency groups
+uv pip install -e ".[dev,test,viz]"
+```
+
+#### Code Quality Tools
+```bash
+# Format code
+uv run black src/ demos/ tests/
+
+# Sort imports
+uv run isort src/ demos/ tests/
+
+# Type checking
+uv run mypy src/
+
+# Linting
+uv run flake8 src/ demos/
+
+# Run tests
+uv run pytest
+
+# Run tests with coverage
+uv run pytest --cov=src --cov-report=html
+```
+
 ### Run Interactive Demo
 ```bash
+# Using uv (recommended)
+uv run python demos/interactive_demo.py
+
+# Or activate environment first
+uv venv --activate
 python demos/interactive_demo.py
 ```
 
@@ -183,7 +237,7 @@ graph collection/
 ### 1. **Interactive Demo**
 Explore Graphiti-Cosmos features interactively:
 ```bash
-python demos/interactive_demo.py
+uv run python demos/interactive_demo.py
 ```
 
 Features:
@@ -196,7 +250,7 @@ Features:
 ### 2. **E-commerce Intelligence**
 Experience real-world e-commerce scenarios:
 ```bash
-python demos/ecommerce_intelligence_demo_fixed.py
+uv run python demos/ecommerce_intelligence_demo_fixed.py
 ```
 
 Demonstrates:
@@ -208,7 +262,7 @@ Demonstrates:
 ### 3. **Advanced Business Intelligence**
 Comprehensive business intelligence platform:
 ```bash
-python demos/compelling_use_case_demo_fixed.py
+uv run python demos/compelling_use_case_demo_fixed.py
 ```
 
 Showcases:
@@ -603,10 +657,10 @@ graph TB
 ### **Search Functionality Testing**
 ```bash
 # Basic search validation
-python test_search.py
+uv run python test_search.py
 
 # Enhanced search validation with multiple scenarios
-python test_search_enhanced.py
+uv run python test_search_enhanced.py
 ```
 
 ### **Test Coverage**
