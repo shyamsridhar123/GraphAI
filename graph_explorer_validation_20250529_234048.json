@@ -1,0 +1,186 @@
+{
+  "total_tests": 17,
+  "successful_tests": 17,
+  "success_rate": 100.0,
+  "test_results": [
+    {
+      "test": "llm_keyword_extraction",
+      "query": "Find all people who work for technology companies",
+      "keywords": [
+        "Person",
+        "works_for",
+        "Technology Company",
+        "employment relationship",
+        "company type"
+      ],
+      "success": true
+    },
+    {
+      "test": "llm_keyword_extraction",
+      "query": "Show me sustainable products and their manufacturers",
+      "keywords": [
+        "sustainable product",
+        "manufacturer",
+        "produced_by",
+        "sustainability",
+        "product-manufacturer network"
+      ],
+      "success": true
+    },
+    {
+      "test": "llm_keyword_extraction",
+      "query": "What organizations are connected to renewable energy?",
+      "keywords": [
+        "organization",
+        "renewable energy",
+        "connected to",
+        "affiliation",
+        "energy sector"
+      ],
+      "success": true
+    },
+    {
+      "test": "llm_keyword_extraction",
+      "query": "Find customers who purchased electronics recently",
+      "keywords": [
+        "customers",
+        "purchased",
+        "electronics",
+        "recently",
+        "transactions"
+      ],
+      "success": true
+    },
+    {
+      "test": "semantic_entity_search",
+      "search_term": "technology company",
+      "results_count": 5,
+      "success": true
+    },
+    {
+      "test": "semantic_entity_search",
+      "search_term": "sustainable product",
+      "results_count": 5,
+      "success": true
+    },
+    {
+      "test": "semantic_entity_search",
+      "search_term": "renewable energy",
+      "results_count": 5,
+      "success": true
+    },
+    {
+      "test": "semantic_entity_search",
+      "search_term": "customer electronics",
+      "results_count": 5,
+      "success": true
+    },
+    {
+      "test": "nl_interpretation",
+      "query": "Show me all people who work for organizations in the tech industry",
+      "interpretation": {
+        "intent": "search_entities",
+        "search_terms": [
+          "people",
+          "organizations",
+          "tech industry",
+          "works for"
+        ],
+        "strategy": "semantic_search",
+        "result_type": "specific_entities",
+        "confidence": 0.95,
+        "explanation": "The query seeks to identify all individuals (people) who are connected via a 'works for' relationship to organizations classified within the tech industry. This requires semantic understanding of industry classification and relationship traversal."
+      },
+      "success": true
+    },
+    {
+      "test": "nl_interpretation",
+      "query": "Find products that are related to environmental sustainability",
+      "interpretation": {
+        "intent": "search_entities",
+        "search_terms": [
+          "products",
+          "environmental sustainability",
+          "sustainable products",
+          "eco-friendly"
+        ],
+        "strategy": "semantic_search",
+        "result_type": "specific_entities",
+        "confidence": 0.92,
+        "explanation": "The query seeks to identify specific products associated with the concept of environmental sustainability, suggesting a semantic search for entities (products) linked to this concept."
+      },
+      "success": true
+    },
+    {
+      "test": "nl_interpretation",
+      "query": "What are the relationships between customers and their recent purchases?",
+      "interpretation": {
+        "intent": "search_relationships",
+        "search_terms": [
+          "customers",
+          "purchases",
+          "recent purchases",
+          "customer-purchase relationships"
+        ],
+        "strategy": "semantic_search",
+        "result_type": "relationship_patterns",
+        "confidence": 0.95,
+        "explanation": "The query seeks to understand how customers are connected to their recent purchases, focusing on the relationships between these entities rather than individual entities or broader community structures."
+      },
+      "success": true
+    },
+    {
+      "test": "nl_interpretation",
+      "query": "Analyze the network of suppliers and manufacturers",
+      "interpretation": {
+        "intent": "analyze_subgraphs",
+        "search_terms": [
+          "suppliers",
+          "manufacturers",
+          "network"
+        ],
+        "strategy": "broad_exploration",
+        "result_type": "relationship_patterns",
+        "confidence": 0.92,
+        "explanation": "The query seeks to analyze how suppliers and manufacturers are connected, implying a need to explore and understand the structure and patterns of their relationships within the network."
+      },
+      "success": true
+    },
+    {
+      "test": "dynamic_query_generation",
+      "search_type": "exact match",
+      "term": "Microsoft",
+      "results_count": 3,
+      "success": true
+    },
+    {
+      "test": "dynamic_query_generation",
+      "search_type": "partial match",
+      "term": "tech",
+      "results_count": 3,
+      "success": true
+    },
+    {
+      "test": "dynamic_query_generation",
+      "search_type": "semantic search",
+      "term": "innovation",
+      "results_count": 3,
+      "success": true
+    },
+    {
+      "test": "dynamic_query_generation",
+      "search_type": "broad exploration",
+      "term": "",
+      "results_count": 3,
+      "success": true
+    },
+    {
+      "test": "llm_result_enhancement",
+      "query": "Find technology companies and their products",
+      "basic_count": 6,
+      "enhanced_count": 6,
+      "has_insights": true,
+      "success": true
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+===== CUSTOMER INSIGHTS REPORT =====
+Generated: 2025-05-30 11:31:58
+
+CUSTOMER BEHAVIOR ANALYSIS:
+• Purchase Events: 0
+• Browse Events: 0
+• Product View Events: 0
+
+CUSTOMER INSIGHTS:

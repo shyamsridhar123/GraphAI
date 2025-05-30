@@ -1,0 +1,2523 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enhanced Graph Visualization</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style type="text/css">
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .stat {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+        
+        #networkContainer {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+        
+        .legend {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .legend-item {
+            display: inline-block;
+            margin: 5px 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .community-list {
+            margin-top: 20px;
+        }
+        
+        .community-item {
+            background: #f8f9fa;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🕸️ Enhanced Graph Visualization</h1>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">50</div>
+                <div class="stat-label">Entities</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">142</div>
+                <div class="stat-label">Relationships</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Communities</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" onclick="network.fit()">🔍 Fit to Screen</button>
+            <button class="btn" onclick="togglePhysics()">⚡ Toggle Physics</button>
+            <button class="btn" onclick="highlightCommunities()">🏘️ Highlight Communities</button>
+            <button class="btn" onclick="resetView()">🔄 Reset View</button>
+        </div>
+        
+        <div id="networkContainer"></div>
+        
+        <div class="legend">
+            <div class="legend-title">Entity Types:</div>
+            <span class="legend-item" style="background-color: #E74C3C;">👤 Person</span>
+            <span class="legend-item" style="background-color: #3498DB;">🏢 Organization</span>
+            <span class="legend-item" style="background-color: #2ECC71;">📦 Product</span>
+            <span class="legend-item" style="background-color: #F39C12;">📍 Location</span>
+            <span class="legend-item" style="background-color: #9B59B6;">🎯 Event</span>
+            <span class="legend-item" style="background-color: #1ABC9C;">💡 Concept</span>
+            <span class="legend-item" style="background-color: #34495E;">⚙️ Technology</span>
+        </div>
+        
+        <div class="community-list">
+            <div class="legend-title">Detected Communities:</div>
+            
+            <div class="community-item">
+                <strong>Person Community</strong> (15 entities)<br>
+                <small>Members: John Smith, Sarah Johnson, Alice Williams, Sarah Williams, Marcus Chen...</small>
+            </div>
+            
+            <div class="community-item">
+                <strong>Organization Community</strong> (10 entities)<br>
+                <small>Members: Microsoft, Azure team, OpenAI, AI ethics committee, Stanford University...</small>
+            </div>
+            
+            <div class="community-item">
+                <strong>Product Community</strong> (14 entities)<br>
+                <small>Members: Copilot, GPT-5, autonomous vehicles, autonomous driving feature, Starship...</small>
+            </div>
+            
+            <div class="community-item">
+                <strong>Concept Community</strong> (11 entities)<br>
+                <small>Members: language models, transformer architectures, responsible AI guidelines, safety protocols, reusable rocket technology...</small>
+            </div>
+            
+        </div>
+    </div>
+
+    <script type="text/javascript">        // Network data
+        const nodes = new vis.DataSet([
+        {
+                "id": "entity_john_smith",
+                "label": "John Smith",
+                "title": "John Smith (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_microsoft",
+                "label": "Microsoft",
+                "title": "Microsoft (organization)",
+                "group": "organization",
+                "color": "#3498DB",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_copilot",
+                "label": "Copilot",
+                "title": "Copilot (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_sarah_johnson",
+                "label": "Sarah Johnson",
+                "title": "Sarah Johnson (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_azure_team",
+                "label": "Azure team",
+                "title": "Azure team (organization)",
+                "group": "organization",
+                "color": "#3498DB",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_alice_williams",
+                "label": "Alice Williams",
+                "title": "Alice Williams (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_openai",
+                "label": "OpenAI",
+                "title": "OpenAI (organization)",
+                "group": "organization",
+                "color": "#3498DB",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_language_models",
+                "label": "language models",
+                "title": "language models (concept)",
+                "group": "concept",
+                "color": "#1ABC9C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_transformer_architectures",
+                "label": "transformer architectures",
+                "title": "transformer architectures (concept)",
+                "group": "concept",
+                "color": "#1ABC9C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_sarah_williams",
+                "label": "Sarah Williams",
+                "title": "Sarah Williams (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_gpt-5",
+                "label": "GPT-5",
+                "title": "GPT-5 (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_marcus_chen",
+                "label": "Marcus Chen",
+                "title": "Marcus Chen (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_dr._elena_rodriguez",
+                "label": "Dr. Elena Rodriguez",
+                "title": "Dr. Elena Rodriguez (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_ai_ethics_committee",
+                "label": "AI ethics committee",
+                "title": "AI ethics committee (organization)",
+                "group": "organization",
+                "color": "#3498DB",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_stanford_university",
+                "label": "Stanford University",
+                "title": "Stanford University (organization)",
+                "group": "organization",
+                "color": "#3498DB",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_professor_james_kim",
+                "label": "Professor James Kim",
+                "title": "Professor James Kim (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_computer_science_department",
+                "label": "computer science department",
+                "title": "computer science department (organization)",
+                "group": "organization",
+                "color": "#3498DB",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_responsible_ai_guidelines",
+                "label": "responsible AI guidelines",
+                "title": "responsible AI guidelines (concept)",
+                "group": "concept",
+                "color": "#1ABC9C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_autonomous_vehicles",
+                "label": "autonomous vehicles",
+                "title": "autonomous vehicles (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_tesla",
+                "label": "Tesla",
+                "title": "Tesla (organization)",
+                "group": "organization",
+                "color": "#3498DB",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_autonomous_driving_feature",
+                "label": "autonomous driving feature",
+                "title": "autonomous driving feature (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_elon_musk",
+                "label": "Elon Musk",
+                "title": "Elon Musk (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_engineering_team",
+                "label": "engineering team",
+                "title": "engineering team (organization)",
+                "group": "organization",
+                "color": "#3498DB",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_safety_protocols",
+                "label": "safety protocols",
+                "title": "safety protocols (concept)",
+                "group": "concept",
+                "color": "#1ABC9C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_spacex",
+                "label": "SpaceX",
+                "title": "SpaceX (organization)",
+                "group": "organization",
+                "color": "#3498DB",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_starship",
+                "label": "Starship",
+                "title": "Starship (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_reusable_rocket_technology",
+                "label": "reusable rocket technology",
+                "title": "reusable rocket technology (concept)",
+                "group": "concept",
+                "color": "#1ABC9C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_cust_001",
+                "label": "CUST_001",
+                "title": "CUST_001 (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_emma_thompson",
+                "label": "Emma Thompson",
+                "title": "Emma Thompson (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_sneakers",
+                "label": "sneakers",
+                "title": "sneakers (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_sustainability_filter",
+                "label": "Sustainability filter",
+                "title": "Sustainability filter (concept)",
+                "group": "concept",
+                "color": "#1ABC9C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_cust_002",
+                "label": "CUST_002",
+                "title": "CUST_002 (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_urban_classic_loafers",
+                "label": "Urban Classic Loafers",
+                "title": "Urban Classic Loafers (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_professional_urban",
+                "label": "professional_urban",
+                "title": "professional_urban (concept)",
+                "group": "concept",
+                "color": "#1ABC9C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_website",
+                "label": "website",
+                "title": "website (concept)",
+                "group": "concept",
+                "color": "#1ABC9C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_cust_003",
+                "label": "CUST_003",
+                "title": "CUST_003 (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_sofia_rodriguez",
+                "label": "Sofia Rodriguez",
+                "title": "Sofia Rodriguez (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_hiking_boots",
+                "label": "hiking_boots",
+                "title": "hiking_boots (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_support",
+                "label": "support",
+                "title": "support (organization)",
+                "group": "organization",
+                "color": "#3498DB",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_sizing",
+                "label": "sizing",
+                "title": "sizing (concept)",
+                "group": "concept",
+                "color": "#1ABC9C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_boots",
+                "label": "boots",
+                "title": "boots (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_ecowalk_sustainable_sneakers",
+                "label": "EcoWalk Sustainable Sneakers",
+                "title": "EcoWalk Sustainable Sneakers (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_eco_conscious_millennials",
+                "label": "eco_conscious_millennials",
+                "title": "eco_conscious_millennials (concept)",
+                "group": "concept",
+                "color": "#1ABC9C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_mobile_app",
+                "label": "mobile_app",
+                "title": "mobile_app (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_dress_shoes",
+                "label": "dress_shoes",
+                "title": "dress_shoes (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_engagement_score",
+                "label": "Engagement score",
+                "title": "Engagement score (concept)",
+                "group": "concept",
+                "color": "#1ABC9C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_customer_cust_002",
+                "label": "Customer CUST_002",
+                "title": "Customer CUST_002 (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_loafers",
+                "label": "loafers",
+                "title": "loafers (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_executive_dress_shoes",
+                "label": "Executive Dress Shoes",
+                "title": "Executive Dress Shoes (product)",
+                "group": "product",
+                "color": "#2ECC71",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        },
+        {
+                "id": "entity_customer_cust_003",
+                "label": "Customer CUST_003",
+                "title": "Customer CUST_003 (person)",
+                "group": "person",
+                "color": "#E74C3C",
+                "size": 20,
+                "font": {
+                        "size": 12
+                }
+        }
+]);
+        const edges = new vis.DataSet([
+        {
+                "from": "entity_john_smith",
+                "to": "entity_microsoft",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_john_smith",
+                "to": "entity_copilot",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_john_smith",
+                "to": "entity_sarah_johnson",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_john_smith",
+                "to": "entity_azure_team",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_microsoft",
+                "to": "entity_copilot",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_microsoft",
+                "to": "entity_sarah_johnson",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_microsoft",
+                "to": "entity_azure_team",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_copilot",
+                "to": "entity_sarah_johnson",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_copilot",
+                "to": "entity_azure_team",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sarah_johnson",
+                "to": "entity_azure_team",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_alice_williams",
+                "to": "entity_openai",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_alice_williams",
+                "to": "entity_language_models",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_alice_williams",
+                "to": "entity_transformer_architectures",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_openai",
+                "to": "entity_language_models",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_openai",
+                "to": "entity_transformer_architectures",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_openai",
+                "to": "entity_sarah_williams",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_openai",
+                "to": "entity_gpt-5",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_openai",
+                "to": "entity_marcus_chen",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_language_models",
+                "to": "entity_transformer_architectures",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sarah_williams",
+                "to": "entity_gpt-5",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sarah_williams",
+                "to": "entity_marcus_chen",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_gpt-5",
+                "to": "entity_marcus_chen",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_marcus_chen",
+                "to": "entity_sustainability_filter",
+                "width": 10,
+                "label": "(25)",
+                "title": "Co-occurrence weight: 25",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_marcus_chen",
+                "to": "entity_cust_002",
+                "width": 10,
+                "label": "(17)",
+                "title": "Co-occurrence weight: 17",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_marcus_chen",
+                "to": "entity_professional_urban",
+                "width": 4,
+                "label": "(2)",
+                "title": "Co-occurrence weight: 2",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_marcus_chen",
+                "to": "entity_dress_shoes",
+                "width": 10,
+                "label": "(15)",
+                "title": "Co-occurrence weight: 15",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_marcus_chen",
+                "to": "entity_engagement_score",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_marcus_chen",
+                "to": "entity_customer_cust_002",
+                "width": 10,
+                "label": "(12)",
+                "title": "Co-occurrence weight: 12",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_marcus_chen",
+                "to": "entity_loafers",
+                "width": 10,
+                "label": "(13)",
+                "title": "Co-occurrence weight: 13",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_dr._elena_rodriguez",
+                "to": "entity_ai_ethics_committee",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_dr._elena_rodriguez",
+                "to": "entity_stanford_university",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_dr._elena_rodriguez",
+                "to": "entity_professor_james_kim",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_dr._elena_rodriguez",
+                "to": "entity_computer_science_department",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_dr._elena_rodriguez",
+                "to": "entity_responsible_ai_guidelines",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_dr._elena_rodriguez",
+                "to": "entity_autonomous_vehicles",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_ai_ethics_committee",
+                "to": "entity_stanford_university",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_ai_ethics_committee",
+                "to": "entity_professor_james_kim",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_ai_ethics_committee",
+                "to": "entity_computer_science_department",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_ai_ethics_committee",
+                "to": "entity_responsible_ai_guidelines",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_ai_ethics_committee",
+                "to": "entity_autonomous_vehicles",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_stanford_university",
+                "to": "entity_professor_james_kim",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_stanford_university",
+                "to": "entity_computer_science_department",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_stanford_university",
+                "to": "entity_responsible_ai_guidelines",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_stanford_university",
+                "to": "entity_autonomous_vehicles",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_professor_james_kim",
+                "to": "entity_computer_science_department",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_professor_james_kim",
+                "to": "entity_responsible_ai_guidelines",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_professor_james_kim",
+                "to": "entity_autonomous_vehicles",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_computer_science_department",
+                "to": "entity_responsible_ai_guidelines",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_computer_science_department",
+                "to": "entity_autonomous_vehicles",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_responsible_ai_guidelines",
+                "to": "entity_autonomous_vehicles",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_tesla",
+                "to": "entity_autonomous_driving_feature",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_tesla",
+                "to": "entity_elon_musk",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_tesla",
+                "to": "entity_engineering_team",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_tesla",
+                "to": "entity_safety_protocols",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_autonomous_driving_feature",
+                "to": "entity_elon_musk",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_autonomous_driving_feature",
+                "to": "entity_engineering_team",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_autonomous_driving_feature",
+                "to": "entity_safety_protocols",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_elon_musk",
+                "to": "entity_engineering_team",
+                "width": 4,
+                "label": "(2)",
+                "title": "Co-occurrence weight: 2",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_elon_musk",
+                "to": "entity_safety_protocols",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_elon_musk",
+                "to": "entity_spacex",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_elon_musk",
+                "to": "entity_starship",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_elon_musk",
+                "to": "entity_reusable_rocket_technology",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_engineering_team",
+                "to": "entity_safety_protocols",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_engineering_team",
+                "to": "entity_spacex",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_engineering_team",
+                "to": "entity_starship",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_engineering_team",
+                "to": "entity_reusable_rocket_technology",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_spacex",
+                "to": "entity_starship",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_spacex",
+                "to": "entity_reusable_rocket_technology",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_starship",
+                "to": "entity_reusable_rocket_technology",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_001",
+                "to": "entity_emma_thompson",
+                "width": 10,
+                "label": "(21)",
+                "title": "Co-occurrence weight: 21",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_001",
+                "to": "entity_sneakers",
+                "width": 10,
+                "label": "(6)",
+                "title": "Co-occurrence weight: 6",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_001",
+                "to": "entity_sustainability_filter",
+                "width": 10,
+                "label": "(19)",
+                "title": "Co-occurrence weight: 19",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_001",
+                "to": "entity_website",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_001",
+                "to": "entity_support",
+                "width": 10,
+                "label": "(14)",
+                "title": "Co-occurrence weight: 14",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_001",
+                "to": "entity_sizing",
+                "width": 4,
+                "label": "(2)",
+                "title": "Co-occurrence weight: 2",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_001",
+                "to": "entity_boots",
+                "width": 10,
+                "label": "(15)",
+                "title": "Co-occurrence weight: 15",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_001",
+                "to": "entity_ecowalk_sustainable_sneakers",
+                "width": 10,
+                "label": "(7)",
+                "title": "Co-occurrence weight: 7",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_001",
+                "to": "entity_eco_conscious_millennials",
+                "width": 10,
+                "label": "(9)",
+                "title": "Co-occurrence weight: 9",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_001",
+                "to": "entity_mobile_app",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_001",
+                "to": "entity_engagement_score",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_emma_thompson",
+                "to": "entity_sneakers",
+                "width": 10,
+                "label": "(11)",
+                "title": "Co-occurrence weight: 11",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_emma_thompson",
+                "to": "entity_sustainability_filter",
+                "width": 10,
+                "label": "(29)",
+                "title": "Co-occurrence weight: 29",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_emma_thompson",
+                "to": "entity_boots",
+                "width": 10,
+                "label": "(21)",
+                "title": "Co-occurrence weight: 21",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_emma_thompson",
+                "to": "entity_eco_conscious_millennials",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_emma_thompson",
+                "to": "entity_engagement_score",
+                "width": 10,
+                "label": "(8)",
+                "title": "Co-occurrence weight: 8",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sneakers",
+                "to": "entity_sustainability_filter",
+                "width": 10,
+                "label": "(11)",
+                "title": "Co-occurrence weight: 11",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sneakers",
+                "to": "entity_engagement_score",
+                "width": 10,
+                "label": "(5)",
+                "title": "Co-occurrence weight: 5",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sustainability_filter",
+                "to": "entity_cust_002",
+                "width": 10,
+                "label": "(16)",
+                "title": "Co-occurrence weight: 16",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sustainability_filter",
+                "to": "entity_cust_003",
+                "width": 10,
+                "label": "(27)",
+                "title": "Co-occurrence weight: 27",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sustainability_filter",
+                "to": "entity_sofia_rodriguez",
+                "width": 10,
+                "label": "(29)",
+                "title": "Co-occurrence weight: 29",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sustainability_filter",
+                "to": "entity_hiking_boots",
+                "width": 10,
+                "label": "(14)",
+                "title": "Co-occurrence weight: 14",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sustainability_filter",
+                "to": "entity_boots",
+                "width": 10,
+                "label": "(18)",
+                "title": "Co-occurrence weight: 18",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sustainability_filter",
+                "to": "entity_dress_shoes",
+                "width": 10,
+                "label": "(13)",
+                "title": "Co-occurrence weight: 13",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sustainability_filter",
+                "to": "entity_engagement_score",
+                "width": 10,
+                "label": "(10)",
+                "title": "Co-occurrence weight: 10",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sustainability_filter",
+                "to": "entity_customer_cust_002",
+                "width": 10,
+                "label": "(10)",
+                "title": "Co-occurrence weight: 10",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sustainability_filter",
+                "to": "entity_loafers",
+                "width": 10,
+                "label": "(12)",
+                "title": "Co-occurrence weight: 12",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sustainability_filter",
+                "to": "entity_customer_cust_003",
+                "width": 4,
+                "label": "(2)",
+                "title": "Co-occurrence weight: 2",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_002",
+                "to": "entity_urban_classic_loafers",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_002",
+                "to": "entity_professional_urban",
+                "width": 10,
+                "label": "(10)",
+                "title": "Co-occurrence weight: 10",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_002",
+                "to": "entity_website",
+                "width": 8,
+                "label": "(4)",
+                "title": "Co-occurrence weight: 4",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_002",
+                "to": "entity_support",
+                "width": 10,
+                "label": "(5)",
+                "title": "Co-occurrence weight: 5",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_002",
+                "to": "entity_sizing",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_002",
+                "to": "entity_mobile_app",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_002",
+                "to": "entity_dress_shoes",
+                "width": 10,
+                "label": "(12)",
+                "title": "Co-occurrence weight: 12",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_002",
+                "to": "entity_engagement_score",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_002",
+                "to": "entity_customer_cust_002",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_002",
+                "to": "entity_loafers",
+                "width": 10,
+                "label": "(5)",
+                "title": "Co-occurrence weight: 5",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_002",
+                "to": "entity_executive_dress_shoes",
+                "width": 10,
+                "label": "(7)",
+                "title": "Co-occurrence weight: 7",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_urban_classic_loafers",
+                "to": "entity_professional_urban",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_urban_classic_loafers",
+                "to": "entity_website",
+                "width": 4,
+                "label": "(2)",
+                "title": "Co-occurrence weight: 2",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_professional_urban",
+                "to": "entity_website",
+                "width": 8,
+                "label": "(4)",
+                "title": "Co-occurrence weight: 4",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_professional_urban",
+                "to": "entity_mobile_app",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_professional_urban",
+                "to": "entity_dress_shoes",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_professional_urban",
+                "to": "entity_customer_cust_002",
+                "width": 4,
+                "label": "(2)",
+                "title": "Co-occurrence weight: 2",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_professional_urban",
+                "to": "entity_loafers",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_professional_urban",
+                "to": "entity_executive_dress_shoes",
+                "width": 10,
+                "label": "(7)",
+                "title": "Co-occurrence weight: 7",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_website",
+                "to": "entity_cust_003",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_website",
+                "to": "entity_ecowalk_sustainable_sneakers",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_website",
+                "to": "entity_eco_conscious_millennials",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_website",
+                "to": "entity_mobile_app",
+                "width": 4,
+                "label": "(2)",
+                "title": "Co-occurrence weight: 2",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_website",
+                "to": "entity_executive_dress_shoes",
+                "width": 4,
+                "label": "(2)",
+                "title": "Co-occurrence weight: 2",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_003",
+                "to": "entity_sofia_rodriguez",
+                "width": 10,
+                "label": "(30)",
+                "title": "Co-occurrence weight: 30",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_003",
+                "to": "entity_hiking_boots",
+                "width": 10,
+                "label": "(13)",
+                "title": "Co-occurrence weight: 13",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_003",
+                "to": "entity_support",
+                "width": 10,
+                "label": "(5)",
+                "title": "Co-occurrence weight: 5",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_003",
+                "to": "entity_sizing",
+                "width": 10,
+                "label": "(5)",
+                "title": "Co-occurrence weight: 5",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_003",
+                "to": "entity_mobile_app",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_cust_003",
+                "to": "entity_engagement_score",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sofia_rodriguez",
+                "to": "entity_hiking_boots",
+                "width": 10,
+                "label": "(14)",
+                "title": "Co-occurrence weight: 14",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sofia_rodriguez",
+                "to": "entity_engagement_score",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_sofia_rodriguez",
+                "to": "entity_customer_cust_003",
+                "width": 4,
+                "label": "(2)",
+                "title": "Co-occurrence weight: 2",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_hiking_boots",
+                "to": "entity_engagement_score",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_hiking_boots",
+                "to": "entity_customer_cust_003",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_support",
+                "to": "entity_sizing",
+                "width": 10,
+                "label": "(8)",
+                "title": "Co-occurrence weight: 8",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_boots",
+                "to": "entity_eco_conscious_millennials",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_boots",
+                "to": "entity_engagement_score",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_ecowalk_sustainable_sneakers",
+                "to": "entity_eco_conscious_millennials",
+                "width": 10,
+                "label": "(7)",
+                "title": "Co-occurrence weight: 7",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_ecowalk_sustainable_sneakers",
+                "to": "entity_mobile_app",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_eco_conscious_millennials",
+                "to": "entity_mobile_app",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_mobile_app",
+                "to": "entity_executive_dress_shoes",
+                "width": 6,
+                "label": "(3)",
+                "title": "Co-occurrence weight: 3",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_dress_shoes",
+                "to": "entity_customer_cust_002",
+                "width": 8,
+                "label": "(4)",
+                "title": "Co-occurrence weight: 4",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_engagement_score",
+                "to": "entity_loafers",
+                "width": 2,
+                "label": "(1)",
+                "title": "Co-occurrence weight: 1",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        },
+        {
+                "from": "entity_customer_cust_002",
+                "to": "entity_loafers",
+                "width": 10,
+                "label": "(8)",
+                "title": "Co-occurrence weight: 8",
+                "color": {
+                        "color": "#848484",
+                        "opacity": 0.6
+                }
+        }
+]);
+        const data = { nodes: nodes, edges: edges };
+        
+        // Communities data
+        const communities = [
+        {
+                "id": "community_0",
+                "name": "Person Community",
+                "type": "person",
+                "entities": [
+                        "entity_john_smith",
+                        "entity_sarah_johnson",
+                        "entity_alice_williams",
+                        "entity_sarah_williams",
+                        "entity_marcus_chen",
+                        "entity_dr._elena_rodriguez",
+                        "entity_professor_james_kim",
+                        "entity_elon_musk",
+                        "entity_cust_001",
+                        "entity_emma_thompson",
+                        "entity_cust_002",
+                        "entity_cust_003",
+                        "entity_sofia_rodriguez",
+                        "entity_customer_cust_002",
+                        "entity_customer_cust_003"
+                ],
+                "size": 15,
+                "color": "#FF6B6B"
+        },
+        {
+                "id": "community_1",
+                "name": "Organization Community",
+                "type": "organization",
+                "entities": [
+                        "entity_microsoft",
+                        "entity_azure_team",
+                        "entity_openai",
+                        "entity_ai_ethics_committee",
+                        "entity_stanford_university",
+                        "entity_computer_science_department",
+                        "entity_tesla",
+                        "entity_engineering_team",
+                        "entity_spacex",
+                        "entity_support"
+                ],
+                "size": 10,
+                "color": "#4ECDC4"
+        },
+        {
+                "id": "community_2",
+                "name": "Product Community",
+                "type": "product",
+                "entities": [
+                        "entity_copilot",
+                        "entity_gpt-5",
+                        "entity_autonomous_vehicles",
+                        "entity_autonomous_driving_feature",
+                        "entity_starship",
+                        "entity_sneakers",
+                        "entity_urban_classic_loafers",
+                        "entity_hiking_boots",
+                        "entity_boots",
+                        "entity_ecowalk_sustainable_sneakers",
+                        "entity_mobile_app",
+                        "entity_dress_shoes",
+                        "entity_loafers",
+                        "entity_executive_dress_shoes"
+                ],
+                "size": 14,
+                "color": "#45B7D1"
+        },
+        {
+                "id": "community_3",
+                "name": "Concept Community",
+                "type": "concept",
+                "entities": [
+                        "entity_language_models",
+                        "entity_transformer_architectures",
+                        "entity_responsible_ai_guidelines",
+                        "entity_safety_protocols",
+                        "entity_reusable_rocket_technology",
+                        "entity_sustainability_filter",
+                        "entity_professional_urban",
+                        "entity_website",
+                        "entity_sizing",
+                        "entity_eco_conscious_millennials",
+                        "entity_engagement_score"
+                ],
+                "size": 11,
+                "color": "#FF9FF3"
+        }
+];
+        
+        // Network options
+        const options = {
+            physics: {
+                enabled: true,
+                stabilization: { iterations: 100 },
+                barnesHut: {
+                    gravitationalConstant: -2000,
+                    centralGravity: 0.3,
+                    springLength: 95,
+                    springConstant: 0.04,
+                    damping: 0.09
+                }
+            },
+            interaction: {
+                hover: true,
+                selectConnectedEdges: true,
+                tooltipDelay: 200
+            },
+            nodes: {
+                borderWidth: 2,
+                shadow: true,
+                font: {
+                    size: 12,
+                    color: '#343434'
+                }
+            },
+            edges: {
+                shadow: true,
+                smooth: {
+                    type: 'continuous'
+                }
+            },
+            layout: {
+                improvedLayout: true
+            }
+        };
+        
+        // Create network
+        const container = document.getElementById('networkContainer');
+        const network = new vis.Network(container, data, options);
+        
+        // Global variables
+        let physicsEnabled = true;
+        let originalNodeColors = {};
+        let originalEdgeColors = {};
+        
+        // Store original colors
+        nodes.forEach(node => {
+            originalNodeColors[node.id] = node.color;
+        });
+        edges.forEach(edge => {
+            originalEdgeColors[edge.id] = edge.color;
+        });
+        
+        // Network event listeners
+        network.on("selectNode", function (params) {
+            if (params.nodes.length > 0) {
+                const nodeId = params.nodes[0];
+                const node = nodes.get(nodeId);
+                console.log('Selected node:', node);
+            }
+        });
+        
+        network.on("selectEdge", function (params) {
+            if (params.edges.length > 0) {
+                const edgeId = params.edges[0];
+                const edge = edges.get(edgeId);
+                console.log('Selected edge:', edge);
+            }
+        });
+        
+        // Control functions
+        function togglePhysics() {
+            physicsEnabled = !physicsEnabled;
+            network.setOptions({ physics: { enabled: physicsEnabled } });
+        }
+        
+        function highlightCommunities() {
+            // Reset all nodes to light gray
+            const updatedNodes = nodes.map(node => ({
+                ...node,
+                color: '#E0E0E0'
+            }));
+            
+            // Highlight each community with its color
+            communities.forEach((community, index) => {
+                const communityColor = community.color;
+                community.entities.forEach(entityId => {
+                    const nodeIndex = updatedNodes.findIndex(n => n.id === entityId);
+                    if (nodeIndex !== -1) {
+                        updatedNodes[nodeIndex].color = communityColor;
+                    }
+                });
+            });
+            
+            nodes.update(updatedNodes);
+        }
+        
+        function resetView() {
+            // Reset node colors
+            const resetNodes = nodes.map(node => ({
+                ...node,
+                color: originalNodeColors[node.id]
+            }));
+            nodes.update(resetNodes);
+            
+            // Fit to screen
+            network.fit();
+        }
+        
+        // Auto-fit on load
+        network.once("stabilizationIterationsDone", function() {
+            network.fit();
+        });
+        
+        console.log('Enhanced Graph Visualization loaded successfully!');
+        console.log('Entities:', 50);
+        console.log('Relationships:', 142);
+        console.log('Communities:', 4);
+    </script>
+</body>
+</html>

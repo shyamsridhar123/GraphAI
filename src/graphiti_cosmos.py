@@ -542,8 +542,7 @@ class GraphitiCosmos:
             'timestamp': datetime.now(timezone.utc).isoformat(),
             'groupName': self.group_name
         }
-        
-        # Add additional properties
+          # Add additional properties
         for key, value in properties.items():
             query += f".property('{key}', {key})"
             bindings[key] = value
@@ -562,18 +561,96 @@ class GraphitiCosmos:
             'description': relationship.description,
             'confidence': relationship.confidence,
             'episode_id': episode_id,
-            'valid_from': relationship.valid_from.isoformat()        }
+            'valid_from': relationship.valid_from.isoformat()
+        }
         
         await self._create_relationship_edge(
             source_id, target_id, relationship.relation_type.value, properties
         )
-        
+    
     async def search_entities(self, query: str, limit: int = 10) -> List[Dict[str, Any]]:
-        """Search entities using text similarity"""
+        """Search entities using semantic similarity with embeddings"""
         try:
-            # Generate query embedding
-            query_embedding = await self._generate_embedding(query)
+            if not query.strip():
+                # If empty query, return recent or random entities
+                all_entities_query = """
+                g.V().hasLabel('entity')
+                    .has('group_name', groupName)
+                    .valueMap(true)
+                    .limit(limitCount)
+                """
+                return await self._execute_gremlin_query(all_entities_query, {
+                    'groupName': self.group_name,
+                    'limitCount': limit
+                })
             
+            # Generate query embedding for semantic search
+            query_embedding = await self._generate_embedding(query)
+            if not query_embedding:
+                # Fallback to text matching if embedding fails
+                return await self._search_entities_by_text(query, limit)
+            
+            # Get all entities with their embeddings
+            all_entities_query = """
+            g.V().hasLabel('entity')
+                .has('group_name', groupName)
+                .valueMap(true)
+                .limit(1000)
+            """
+            
+            all_entities = await self._execute_gremlin_query(all_entities_query, {
+                'groupName': self.group_name
+            })
+            
+            # Calculate semantic similarity and rank results
+            scored_entities = []
+            for entity in all_entities:
+                name = entity.get('name', [''])[0] if isinstance(entity.get('name', ['']), list) else entity.get('name', '')
+                description = entity.get('description', [''])[0] if isinstance(entity.get('description', ['']), list) else entity.get('description', '')
+                
+                # Try to get stored embedding, or generate one
+                entity_embedding = entity.get('embedding')
+                if not entity_embedding:
+                    # Generate embedding for entity if not stored
+                    entity_text = f"{name} {description}"
+                    entity_embedding = await self._generate_embedding(entity_text)
+                
+                if entity_embedding and len(entity_embedding) == len(query_embedding):
+                    # Calculate cosine similarity
+                    similarity = self._cosine_similarity(query_embedding, entity_embedding)
+                    scored_entities.append((similarity, entity))
+            
+            # Sort by similarity and return top results
+            scored_entities.sort(key=lambda x: x[0], reverse=True)
+            
+            # Also include exact text matches with high scores
+            text_matches = await self._search_entities_by_text(query, limit)
+            for match in text_matches:
+                # Give text matches a high similarity score
+                scored_entities.insert(0, (0.95, match))
+            
+            # Remove duplicates and return top results
+            seen_entities = set()
+            final_results = []
+            
+            for similarity, entity in scored_entities:
+                entity_id = entity.get('id', entity.get('name', ''))
+                if entity_id not in seen_entities:
+                    seen_entities.add(entity_id)
+                    final_results.append(entity)
+                    if len(final_results) >= limit:
+                        break
+            
+            return final_results
+            
+        except Exception as e:
+            print(f"❌ Error in semantic search: {e}")
+            # Fallback to basic text search
+            return await self._search_entities_by_text(query, limit)
+
+    async def _search_entities_by_text(self, query: str, limit: int) -> List[Dict[str, Any]]:
+        """Fallback text-based entity search"""
+        try:
             # First try exact name match
             exact_match_query = """
             g.V().hasLabel('entity')
@@ -583,20 +660,6 @@ class GraphitiCosmos:
                 .limit(limitCount)
             """
             
-            # Try a simpler approach - get all entities first then filter in Python
-            all_entities_query = """
-            g.V().hasLabel('entity')
-                .has('group_name', groupName)
-                .valueMap(true)
-                .limit(100)
-            """
-            
-            bindings = {
-                'groupName': self.group_name,
-                'limitCount': limit
-            }
-            
-            # Try exact match first
             entities = await self._execute_gremlin_query(exact_match_query, {
                 'groupName': self.group_name,
                 'searchTerm': query,
@@ -604,8 +667,17 @@ class GraphitiCosmos:
             })
             
             if not entities:
-                # Get all entities and filter in Python for better compatibility
-                all_entities = await self._execute_gremlin_query(all_entities_query, bindings)
+                # Get all entities and filter in Python for partial matches
+                all_entities_query = """
+                g.V().hasLabel('entity')
+                    .has('group_name', groupName)
+                    .valueMap(true)
+                    .limit(200)
+                """
+                
+                all_entities = await self._execute_gremlin_query(all_entities_query, {
+                    'groupName': self.group_name
+                })
                 
                 # Filter entities that contain the search term
                 entities = []
@@ -619,27 +691,31 @@ class GraphitiCosmos:
                         if len(entities) >= limit:
                             break
             
-            # Format results
-            formatted_entities = []
-            for entity in entities:
-                try:
-                    formatted_entity = {
-                        'id': entity.get('id', [''])[0] if isinstance(entity.get('id', ['']), list) else entity.get('id', ''),
-                        'name': entity.get('name', [''])[0] if isinstance(entity.get('name', ['']), list) else entity.get('name', ''),
-                        'type': entity.get('entity_type', [''])[0] if isinstance(entity.get('entity_type', ['']), list) else entity.get('entity_type', ''),
-                        'description': entity.get('description', [''])[0] if isinstance(entity.get('description', ['']), list) else entity.get('description', '')
-                    }
-                    formatted_entities.append(formatted_entity)
-                except Exception as format_error:
-                    print(f"Warning: Could not format entity: {format_error}")
-                    print(f"Raw entity: {entity}")
-            
-            return formatted_entities
+            return entities
             
         except Exception as e:
-            print(f"❌ Error searching entities: {e}")
+            print(f"❌ Error in text search: {e}")
             return []
+
+    def _cosine_similarity(self, vec1: List[float], vec2: List[float]) -> float:
+        """Calculate cosine similarity between two vectors"""
+        try:
+            import math
             
+            # Calculate dot product
+            dot_product = sum(a * b for a, b in zip(vec1, vec2))
+            
+            # Calculate magnitudes
+            magnitude1 = math.sqrt(sum(a * a for a in vec1))
+            magnitude2 = math.sqrt(sum(a * a for a in vec2))
+              # Avoid division by zero
+            if magnitude1 == 0 or magnitude2 == 0:
+                return 0
+            
+            return dot_product / (magnitude1 * magnitude2)
+        except Exception:
+            return 0
+
     async def search_relationships(self, query: str, limit: int = 10) -> List[Dict[str, Any]]:
         """Search relationships using text similarity"""
         try:
