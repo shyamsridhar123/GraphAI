@@ -1,0 +1,362 @@
+[
+  {
+    "timestamp": "2025-05-28T22:44:28.306287",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 1
+  },
+  {
+    "timestamp": "2025-05-28T22:44:51.717527",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 2
+  },
+  {
+    "timestamp": "2025-05-28T22:45:14.564181",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 3
+  },
+  {
+    "timestamp": "2025-05-28T22:45:18.698240",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 4
+  },
+  {
+    "timestamp": "2025-05-28T22:45:37.255986",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 5
+  },
+  {
+    "timestamp": "2025-05-28T22:45:59.849072",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 6
+  },
+  {
+    "timestamp": "2025-05-28T22:46:09.806266",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 7
+  },
+  {
+    "timestamp": "2025-05-28T22:46:22.494914",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 8
+  },
+  {
+    "timestamp": "2025-05-28T22:46:45.274859",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 9
+  },
+  {
+    "timestamp": "2025-05-28T22:47:01.481813",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 10
+  },
+  {
+    "timestamp": "2025-05-28T22:47:07.892640",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 11
+  },
+  {
+    "timestamp": "2025-05-28T22:47:22.001859",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 12
+  },
+  {
+    "timestamp": "2025-05-28T22:47:30.512070",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 13
+  },
+  {
+    "timestamp": "2025-05-28T22:47:53.219122",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 14
+  },
+  {
+    "timestamp": "2025-05-28T22:48:06.067647",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 15
+  },
+  {
+    "timestamp": "2025-05-28T22:48:15.971344",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 16
+  },
+  {
+    "timestamp": "2025-05-28T22:48:38.468905",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 17
+  },
+  {
+    "timestamp": "2025-05-28T22:48:46.802007",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 18
+  },
+  {
+    "timestamp": "2025-05-28T22:49:01.376588",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 19
+  },
+  {
+    "timestamp": "2025-05-28T22:49:18.125734",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 20
+  },
+  {
+    "timestamp": "2025-05-28T22:49:23.938541",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 21
+  },
+  {
+    "timestamp": "2025-05-28T22:49:39.693790",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 22
+  },
+  {
+    "timestamp": "2025-05-28T22:49:46.505479",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 23
+  },
+  {
+    "timestamp": "2025-05-28T22:50:09.240896",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 24
+  },
+  {
+    "timestamp": "2025-05-28T22:50:31.676723",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 25
+  },
+  {
+    "timestamp": "2025-05-28T22:50:32.946377",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 26
+  },
+  {
+    "timestamp": "2025-05-28T22:50:53.557038",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 27
+  },
+  {
+    "timestamp": "2025-05-28T22:50:54.131570",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 28
+  },
+  {
+    "timestamp": "2025-05-28T22:51:15.984265",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 29
+  },
+  {
+    "timestamp": "2025-05-28T22:51:16.476268",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 30
+  },
+  {
+    "timestamp": "2025-05-28T22:51:39.059516",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 31
+  },
+  {
+    "timestamp": "2025-05-28T22:52:01.781982",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 32
+  },
+  {
+    "timestamp": "2025-05-28T22:52:24.801909",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 33
+  },
+  {
+    "timestamp": "2025-05-28T22:52:47.956580",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 34
+  },
+  {
+    "timestamp": "2025-05-28T22:53:11.194611",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 35
+  },
+  {
+    "timestamp": "2025-05-28T22:53:34.365765",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 36
+  },
+  {
+    "timestamp": "2025-05-28T22:56:34.418345",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 1
+  },
+  {
+    "timestamp": "2025-05-28T22:56:56.552844",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 2
+  },
+  {
+    "timestamp": "2025-05-28T22:57:18.614991",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 3
+  },
+  {
+    "timestamp": "2025-05-28T22:57:40.707869",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 4
+  },
+  {
+    "timestamp": "2025-05-28T22:58:02.898689",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 5
+  },
+  {
+    "timestamp": "2025-05-28T22:58:24.978632",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 6
+  },
+  {
+    "timestamp": "2025-05-28T22:58:46.997912",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 7
+  },
+  {
+    "timestamp": "2025-05-28T23:46:45.054982",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 1
+  },
+  {
+    "timestamp": "2025-05-28T23:47:18.289726",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 2
+  },
+  {
+    "timestamp": "2025-05-28T23:47:51.679511",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 3
+  },
+  {
+    "timestamp": "2025-05-28T23:48:24.361013",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 4
+  },
+  {
+    "timestamp": "2025-05-28T23:53:16.020293",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 1
+  },
+  {
+    "timestamp": "2025-05-28T23:55:44.139113",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 1
+  },
+  {
+    "timestamp": "2025-05-28T23:57:57.620485",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 1
+  },
+  {
+    "timestamp": "2025-05-29T00:13:56.474560",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 1
+  },
+  {
+    "timestamp": "2025-05-29T06:57:04.861919",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 1
+  },
+  {
+    "timestamp": "2025-05-29T06:57:16.031695",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 2
+  },
+  {
+    "timestamp": "2025-05-29T06:57:29.149456",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 3
+  },
+  {
+    "timestamp": "2025-05-29T06:57:42.754001",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 4
+  },
+  {
+    "timestamp": "2025-05-29T06:57:56.569431",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 5
+  },
+  {
+    "timestamp": "2025-05-29T06:58:10.607777",
+    "entities_count": 100,
+    "relationships_count": 100,
+    "update_number": 6
+  },
+  {
+    "timestamp": "2025-05-29T07:14:48.390417",
+    "entities_count": 100,
+    "relationships_count": 0,
+    "update_number": 1
+  },
+  {
+    "timestamp": "2025-05-29T07:17:08.282699",
+    "entities_count": 100,
+    "relationships_count": 0,
+    "update_number": 1
+  },
+  {
+    "timestamp": "2025-05-29T07:24:44.562774",
+    "entities_count": 100,
+    "relationships_count": 0,
+    "update_number": 1
+  }
+]

@@ -1,0 +1,14 @@
+===== BUSINESS INTELLIGENCE SUMMARY =====
+Generated: 2025-05-30 11:33:49
+
+KNOWLEDGE GRAPH METRICS:
+• Episodes Processed: 461
+• Entities Identified: 210
+• Relationships Mapped: 3933
+• Intelligence Density: 18.73
+
+ACTION RECOMMENDATIONS:
+• Focus marketing on highest-engaging product categories
+• Optimize product pages for most-viewed items
+• Develop personalized recommendations based on browsing patterns
+• Enhance checkout experience to improve conversion rates
