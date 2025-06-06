@@ -42,6 +42,8 @@ dependencies = [
     "numpy>=1.24.0,<2.0.0",
     "pandas>=2.0.0,<3.0.0",
     "rich>=13.0.0,<14.0.0",
+    "streamlit>=1.45.1",
+    "plotly>=6.1.2",
 ]
 
 [project.optional-dependencies]
