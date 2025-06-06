@@ -53,7 +53,7 @@ AZURE_OPENAI_ENDPOINT_GPT41="https://your-openai-resource.openai.azure.com/"
 AZURE_OPENAI_KEY_GPT41="your-api-key"
 AZURE_OPENAI_MODEL_GPT41="your-model-deployment-name"
 AZURE_OPENAI_DEPLOYMENT_GPT41="your-model-deployment-name"
-AZURE_OPENAI_API_VERSION="2024-03-01-preview"
+AZURE_OPENAI_API_VERSION="2024-12-01-preview"
 "@ | Out-File -FilePath .\.env -Encoding utf8
     
     Write-Host "Please update the .env file with your Azure credentials." -ForegroundColor Yellow

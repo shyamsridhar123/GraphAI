@@ -82,7 +82,7 @@ def get_openai_client():
     try:
         endpoint = os.getenv("AZURE_OPENAI_ENDPOINT", "").strip('"')
         key = os.getenv("AZURE_OPENAI_KEY", "").strip('"')
-        api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2024-02-01").strip('"')
+        api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2024-12-01-preview").strip('"')
         
         return AzureOpenAI(
             azure_endpoint=endpoint,
