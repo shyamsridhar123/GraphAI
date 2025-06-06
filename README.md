@@ -250,14 +250,14 @@ graph collection/
 
 | **Aspect** | **Graphiti-Cosmos** | **GraphRAG** |
 |------------|---------------------|---------------|
-| **Data Ingestion** | Episodic (event-driven, temporal) | Document-based (static) |
-| **Graph Evolution** | Dynamic, learns from new events | Periodic rebuilds required |
-| **Temporal Awareness** | Built-in chronological tracking | Limited temporal context |
-| **Entity Recognition** | AI-powered, context-aware | Rule-based + AI hybrid |
-| **Relationship Discovery** | Automatic from episodes | Manual + extraction |
-| **Use Case Focus** | Business intelligence, operations | Document retrieval, Q&A |
-| **Learning Approach** | Continuous, incremental | Batch processing |
-| **Real-time Updates** | Native support | Requires reprocessing |
+| **📊 Data Ingestion** | Episodic (event-driven, temporal) | Document-based (static) |
+| **🌱 Graph Evolution** | Dynamic, learns from new events | Periodic rebuilds required |
+| **⏰ Temporal Awareness** | Built-in chronological tracking | Limited temporal context |
+| **🤖 Entity Recognition** | AI-powered, context-aware | Rule-based + AI hybrid |
+| **🔗 Relationship Discovery** | Automatic from episodes | Manual + extraction |
+| **🎯 Use Case Focus** | Business intelligence, operations | Document retrieval, Q&A |
+| **📈 Learning Approach** | Continuous, incremental | Batch processing |
+| **⚡ Real-time Updates** | Native support | Requires reprocessing |
 
 ### 📊 **When to Choose Each:**
 
